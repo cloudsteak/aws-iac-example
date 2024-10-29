@@ -7,15 +7,19 @@ resource "aws_s3_bucket" "tf_state" {
   bucket = var.s3_bucket_name
   acl    = "private"
 
-  versioning {
-    enabled = true
-  }
-
   lifecycle {
     prevent_destroy = true
   }
-  
+
   tags = var.tags
+}
+
+# S3 Bucket Versioning Configuration
+resource "aws_s3_bucket_versioning" "tf_state_versioning" {
+  bucket = aws_s3_bucket.tf_state.id
+  versioning_configuration {
+    status = "Enabled"
+  }
 }
 
 # DynamoDB Table for State Locking
