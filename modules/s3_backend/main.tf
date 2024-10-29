@@ -5,8 +5,8 @@ provider "aws" {
 # S3 Bucket for Terraform State
 resource "aws_s3_bucket" "tf_state" {
   bucket = var.s3_bucket_name
-  acl    = "private"
 
+  
   lifecycle {
     prevent_destroy = true
   }
@@ -20,6 +20,12 @@ resource "aws_s3_bucket_versioning" "tf_state_versioning" {
   versioning_configuration {
     status = "Enabled"
   }
+}
+
+# S3 Bucket ACL
+resource "aws_s3_bucket_acl" "tf_state_acl" {
+  bucket = aws_s3_bucket.tf_state.id
+  acl    = "private"
 }
 
 # DynamoDB Table for State Locking
